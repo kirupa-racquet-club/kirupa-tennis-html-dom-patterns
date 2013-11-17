@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>HTML DOM Patterns</title>
+	<style type="text/css">
+	.pattern {
+		border: 10px solid black;
+		overflow: hidden;
+		position: relative;
+	}
+	.pattern * {
+		position: absolute;
+	}
+
+	.patch {
+		width: 100px;
+		height: 100px;
+		background-color: SteelBlue;
+		overflow: hidden;
+	}
+
+	.patch .pixel {
+		width: 10px;
+		height: 10px;
+		background-color: DeepSkyBlue;
+	}
+	</style>
+</head>
+<body>
+
+<script>
+function createPatch(){
+	var patch = document.createElement("div");
+	patch.className = "patch";
+	patch.appendChild( createElemAt(0, 0, "pixel") );
+	patch.appendChild( createElemAt(10, 10, "pixel") );
+	patch.appendChild( createElemAt(20, 0, "pixel") );
+	return patch;
+}
+
+function createElemAt(x, y, className){
+	var elem = document.createElement("div");
+	elem.className = className;
+	elem.style.left = x + "px";
+	elem.style.top = y + "px";
+	return elem;
+}
+
+function createPattern(countX, countY, offsetX, offsetY, srcPatch){
+	var pattern = document.createElement("div");
+	pattern.className = "pattern";
+	pattern.style.width = countX * offsetX + "px";
+	pattern.style.height = countY * offsetY + "px";
+
+	for (var y=0; y<countY; y++){
+		for (var x=0; x<countX; x++){
+			
+			var patch = srcPatch.cloneNode(true);
+			patch.style.left = x * offsetX + "px";
+			patch.style.top = y * offsetX + "px";
+			pattern.appendChild(patch);
+
+		}
+	}
+
+	return pattern;
+}
+
+
+var patch = createPatch();
+var pattern = createPattern(6, 4, 100, 100, patch);
+document.body.appendChild(pattern);
+</script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 HTML DOM Patterns
 =================
 
-Match Type | Players | Technologies
+Match Type | Players | Technologies | Link
 --- | --- | ---
-[Bug Finder](http://kirupa-racquet-club.github.io/match-types/#bug_squash) | Free for all | HTML, CSS, JavaScript
+[Bug Finder](http://kirupa-racquet-club.github.io/match-types/#bug_squash) | Free for all | HTML, CSS, JavaScript | [View](http://kirupa-racquet-club.github.io/kirupa-tennis-html-dom-patterns/)
 
 
 Description
