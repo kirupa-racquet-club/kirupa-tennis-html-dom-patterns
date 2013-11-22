@@ -21,8 +21,8 @@
 	}
 
 	.patch .pixel {
-		width: 10px;
-		height: 10px;
+		width: 3px;
+		height: 3px;
 		background-color: DeepSkyBlue;
 	}
 	</style>
@@ -30,12 +30,32 @@
 <body>
 
 <script>
-function createPatch(){
+function createPatch(str){
+	var textSize = 10;
+	var w = textSize * str.length;
+	var h = textSize + 3; // some sort of buffer for stuff under the baseline
 	var patch = document.createElement("div");
 	patch.className = "patch";
-	patch.appendChild( createElemAt(0, 0, "pixel") );
-	patch.appendChild( createElemAt(10, 10, "pixel") );
-	patch.appendChild( createElemAt(20, 0, "pixel") );
+	
+    var canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+	
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "black";
+    ctx.font = textSize + "px Consolas";
+    ctx.fillText(str, textSize, textSize, w);
+	
+	var pixels = ctx.getImageData(0, 0, w, h).data;
+
+	for(var i = 0; i < pixels.length; i += 4 /* bytes */){
+		var pixel = pixels[i + 3];
+		if(!pixel) continue;
+		var x = (((i / 4) | 0) % w);
+		var y = (((i / h + 3) | 0) / 4) | 0;
+		patch.appendChild(createElemAt(x, y, "pixel"));
+	}
+	
 	return patch;
 }
 
@@ -58,7 +78,7 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 			
 			var patch = srcPatch.cloneNode(true);
 			patch.style.left = x * offsetX + "px";
-			patch.style.top = y * offsetX + "px";
+			patch.style.top = y * offsetY + "px";
 			pattern.appendChild(patch);
 
 		}
@@ -67,8 +87,7 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 	return pattern;
 }
 
-
-var patch = createPatch();
+var patch = createPatch("O___o");
 var pattern = createPattern(6, 4, 100, 100, patch);
 document.body.appendChild(pattern);
 </script>
