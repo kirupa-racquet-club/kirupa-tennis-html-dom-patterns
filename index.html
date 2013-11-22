@@ -32,7 +32,7 @@
 <script>
 function createPatch(str){
 	var textSize = 10;
-	var w = textSize * str.length;
+	var w = textSize * str.length; // Text is taller than it is wide, so this won't actually give a valid result, it will just make the canvas wider than it needs to be. In order to not waste "canvas pixels" (because they are a rare commodity) we need to find a way to accurately measure the resulting with from whatever the HTML5 equivalent of a TextField is. If you can read this, you either have line wrapping on; if not "Haha! Made you scroll!" http://cdn-static.zdnet.com/i/story/60/05/003301/nelson-muntz.gif
 	var h = textSize + 3; // some sort of buffer for stuff under the baseline
 	var patch = document.createElement("div");
 	patch.className = "patch";
@@ -43,16 +43,18 @@ function createPatch(str){
 	
     var ctx = canvas.getContext("2d");
     ctx.fillStyle = "black";
-    ctx.font = textSize + "px Consolas";
-    ctx.fillText(str, textSize, textSize, w);
+    ctx.font = textSize + "px monospace"; // "px Consolas"
+    ctx.fillText(str, 0, textSize, w);
 	
 	var pixels = ctx.getImageData(0, 0, w, h).data;
+	var pixelSize = 3;
 
 	for(var i = 0; i < pixels.length; i += 4 /* bytes */){
-		var pixel = pixels[i + 3];
-		if(!pixel) continue;
-		var x = (((i / 4) | 0) % w);
-		var y = (((i / h + 3) | 0) / 4) | 0;
+		var pixelAlpha = pixels[i + 3];
+		if(!pixelAlpha) continue;
+		var pixelID = Math.floor(i / 4);
+		var x = Math.floor(pixelID % w) * pixelSize;
+		var y = Math.floor(pixelID / w) * pixelSize;
 		patch.appendChild(createElemAt(x, y, "pixel"));
 	}
 	
@@ -83,7 +85,7 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 
 		}
 	}
-
+	
 	return pattern;
 }
 
