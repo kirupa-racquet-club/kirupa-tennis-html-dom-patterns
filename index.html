@@ -21,8 +21,8 @@
 	}
 
 	.patch .pixel {
-		width: 3px;
-		height: 3px;
+		width: 3px;  /* Default value. Gets replaced in 'createElemAt' */
+		height: 3px; /* Default value. Gets replaced in 'createElemAt' */
 		background-color: DeepSkyBlue;
 	}
 	</style>
@@ -30,9 +30,13 @@
 <body>
 
 <script>
-function createPatch(str){
+// str => String to use as a template when creating a the patch
+// pixelSize => The "pixel accuracy" of how closely the template should be followed.
+//              A value of 3 means each outputted pixel is 3x3.
+//              A value of 1 means a pixel-perfect representation of the passed in 'str'
+function createPatch(str, pixelSize){
 	var textSize = 10;
-	var w = textSize * str.length;
+	var w = textSize * str.length; // Text is taller than it is wide, so this won't actually give a valid result, it will just make the canvas wider than it needs to be. In order to not waste "canvas pixels" (because they are a rare commodity) we need to find a way to accurately measure the resulting with from whatever the HTML5 equivalent of a TextField is. If you can read this, you either have line wrapping on; if not "Haha! Made you scroll!" http://cdn-static.zdnet.com/i/story/60/05/003301/nelson-muntz.gif
 	var h = textSize + 3; // some sort of buffer for stuff under the baseline
 	var patch = document.createElement("div");
 	patch.className = "patch";
@@ -43,27 +47,31 @@ function createPatch(str){
 	
     var ctx = canvas.getContext("2d");
     ctx.fillStyle = "black";
-    ctx.font = textSize + "px Consolas";
-    ctx.fillText(str, textSize, textSize, w);
+    ctx.font = textSize + "px monospace"; // "px Consolas"
+    ctx.fillText(str, 0, textSize, w);
 	
 	var pixels = ctx.getImageData(0, 0, w, h).data;
-
-	for(var i = 0; i < pixels.length; i += 4 /* bytes */){
-		var pixel = pixels[i + 3];
-		if(!pixel) continue;
-		var x = (((i / 4) | 0) % w);
-		var y = (((i / h + 3) | 0) / 4) | 0;
-		patch.appendChild(createElemAt(x, y, "pixel"));
+	var nextPixel = pixelSize * 4 /* bytes */; // "Distance to" next pixel, that is.
+	
+	for(var i = 0; i < pixels.length; i += nextPixel){
+		var pixelAlpha = pixels[i + 3];
+		if(!pixelAlpha) continue;
+		var pixelID = Math.floor(i / 4);
+		var x = Math.floor(pixelID % w) * pixelSize;
+		var y = Math.floor(pixelID / w) * pixelSize;
+		patch.appendChild(createElemAt("pixel", x, y, pixelSize));
 	}
 	
 	return patch;
 }
 
-function createElemAt(x, y, className){
+function createElemAt(className, x, y, size){
 	var elem = document.createElement("div");
 	elem.className = className;
 	elem.style.left = x + "px";
 	elem.style.top = y + "px";
+	elem.style.width = size + "px";
+	elem.style.height = size + "px";
 	return elem;
 }
 
@@ -83,12 +91,13 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 
 		}
 	}
-
+	
 	return pattern;
 }
 
-var patch = createPatch("O___o");
-var pattern = createPattern(6, 4, 100, 100, patch);
+// The spaces are to pad the left a bit, since we have no way of doing that by code (yet).
+var patch = createPatch("    O___o", 1);
+var pattern = createPattern(10, 8, 100, 50, patch);
 document.body.appendChild(pattern);
 </script>
 </body>
