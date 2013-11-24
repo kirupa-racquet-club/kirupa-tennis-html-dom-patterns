@@ -64,10 +64,14 @@ function createPatch(str, pixelSize){
 	for(var i = 0; i < pixels.length; i += nextPixel){
 		var pixelAlpha = pixels[i + 3];
 		if(!pixelAlpha) continue;
-		var pixelID = Math.floor(i / 4);
-		var x = Math.floor(pixelID % w) * pixelSize;
-		var y = Math.floor(pixelID / w) * pixelSize;
-		patch.appendChild(createElemAt("pixel", x, y, pixelSize));
+
+		var pixelIndex = Math.floor(i / 4);
+		var x = Math.floor(pixelIndex % w) * pixelSize;
+		var y = Math.floor(pixelIndex / w) * pixelSize;
+
+		var pixel = createElemAt("pixel", x, y, pixelSize);
+		pixel.style.opacity = pixelAlpha;
+		patch.appendChild(pixel);
 	}
 	
 	return patch;
@@ -105,7 +109,7 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 
 // The spaces are to pad the left a bit, since we have no way of doing that by
 // code (yet).
-var patch = createPatch("    O___o", 1);
+var patch = createPatch("O___o", 1);
 var pattern = createPattern(10, 8, 100, 50, patch);
 document.body.appendChild(pattern);
 </script>
