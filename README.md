@@ -15,4 +15,4 @@ Creating patterns in HTML using the DOM.
 Additional Rules
 ----------------
 
-* TBD
+None.
