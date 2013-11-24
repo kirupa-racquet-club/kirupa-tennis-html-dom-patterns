@@ -59,7 +59,7 @@ function createPatch(str, pixelSize){
     ctx.fillText(str, 0, textSize, w);
 	
 	var pixels = ctx.getImageData(0, 0, w, h).data;
-	var nextPixel = pixelSize * 4 /* bytes */; // "Distance to" next pixel, that is.
+	var nextPixel = 4 /* bytes */; // "Distance to" next pixel, that is.
 	
 	for(var i = 0; i < pixels.length; i += nextPixel){
 		var pixelAlpha = pixels[i + 3];
