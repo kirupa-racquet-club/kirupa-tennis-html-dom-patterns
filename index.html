@@ -36,7 +36,15 @@
 //              A value of 1 means a pixel-perfect representation of the passed in 'str'
 function createPatch(str, pixelSize){
 	var textSize = 10;
-	var w = textSize * str.length; // Text is taller than it is wide, so this won't actually give a valid result, it will just make the canvas wider than it needs to be. In order to not waste "canvas pixels" (because they are a rare commodity) we need to find a way to accurately measure the resulting with from whatever the HTML5 equivalent of a TextField is. If you can read this, you either have line wrapping on; if not "Haha! Made you scroll!" http://cdn-static.zdnet.com/i/story/60/05/003301/nelson-muntz.gif
+
+	// Text is taller than it is wide, so this won't actually give a valid
+	// result, it will just make the canvas wider than it needs to be. In
+	// order to not waste  "canvas pixels" (because they are a rare commodity)
+	// we need to find a way to accurately measure the resulting with
+	// from whatever the HTML5 equivalent of a TextField is. If you can read
+	// this, you either have line wrapping on; if not "Haha! Made you scroll!"
+	// http://cdn-static.zdnet.com/i/story/60/05/003301/nelson-muntz.gif
+	var w = textSize * str.length; 
 	var h = textSize + 3; // some sort of buffer for stuff under the baseline
 	var patch = document.createElement("div");
 	patch.className = "patch";
@@ -95,7 +103,8 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 	return pattern;
 }
 
-// The spaces are to pad the left a bit, since we have no way of doing that by code (yet).
+// The spaces are to pad the left a bit, since we have no way of doing that by
+// code (yet).
 var patch = createPatch("    O___o", 1);
 var pattern = createPattern(10, 8, 100, 50, patch);
 document.body.appendChild(pattern);
