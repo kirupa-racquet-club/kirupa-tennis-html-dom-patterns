@@ -70,7 +70,7 @@ function createPatch(str, pixelSize){
 		var y = Math.floor(pixelIndex / w) * pixelSize;
 
 		var pixel = createElemAt("pixel", x, y, pixelSize);
-		pixel.style.opacity = pixelAlpha;
+		pixel.style.opacity = pixelAlpha / 255;
 		patch.appendChild(pixel);
 	}
 	
