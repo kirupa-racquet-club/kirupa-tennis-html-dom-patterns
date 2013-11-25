@@ -77,7 +77,7 @@ function createPatch(str, textSize, pixelSize){
 
 function createElemAt(className, x, y, size){
 	var elem = document.createElement("div");
-	elem.className = className;
+	elem.className = className + " p" + x + "x" + y;
 	elem.style.left = x + "px";
 	elem.style.top = y + "px";
 	elem.style.width = size + "px";
@@ -105,10 +105,26 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 	return pattern;
 }
 
+function attachBehavior(target){
+	document.addEventListener("click", handleRemoveClickedPixel);
+}
+
+// removes pixels from all instances of the patches 
+// of a pattern when clicked
+function handleRemoveClickedPixel(event){
+	var selector = "." + event.target.className.split(" ").join(".");
+	var matches = document.querySelectorAll(selector);
+	for (var i=0, n=matches.length; i<n; i++){
+		var match = matches[i];
+		match.parentNode.removeChild(match);
+	}
+}
+
 // The spaces are to pad the left a bit, since we have no way of doing that by
 // code (yet).
 var patch = createPatch("O_o", 8, 5);
 var pattern = createPattern(10, 8, 100, 50, patch);
+attachBehavior(pattern);
 document.body.appendChild(pattern);
 </script>
 </body>
