@@ -112,7 +112,9 @@ function attachBehavior(target){
 // removes pixels from all instances of the patches 
 // of a pattern when clicked
 function handleRemoveClickedPixel(event){
-	var selector = "." + event.target.className.split(" ").join(".");
+	var classes = event.target.className;
+	if (classes.indexOf("pixel") == -1) return;
+	var selector = "." + classes.split(" ").join(".");
 	var matches = document.querySelectorAll(selector);
 	for (var i=0, n=matches.length; i<n; i++){
 		var match = matches[i];
