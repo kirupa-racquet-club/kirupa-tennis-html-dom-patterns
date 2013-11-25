@@ -30,11 +30,12 @@
 <body>
 
 <script>
-// str => String to use as a template when creating a the patch
+// str       => String to use as a template when creating a the patch
+// textSize  => The pixel size of the text
 // pixelSize => The "pixel accuracy" of how closely the template should be followed.
 //              A value of 3 means each outputted pixel is 3x3.
 //              A value of 1 means a pixel-perfect representation of the passed in 'str'
-function createPatch(str, pixelSize){
+function createPatch(str, textSize, pixelSize){
 	var textSize = 10;
 
 	// Text is taller than it is wide, so this won't actually give a valid
@@ -109,7 +110,7 @@ function createPattern(countX, countY, offsetX, offsetY, srcPatch){
 
 // The spaces are to pad the left a bit, since we have no way of doing that by
 // code (yet).
-var patch = createPatch("O___o", 3);
+var patch = createPatch("O___o", 10, 3);
 var pattern = createPattern(10, 8, 100, 50, patch);
 document.body.appendChild(pattern);
 </script>
