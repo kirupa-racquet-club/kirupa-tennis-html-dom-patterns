@@ -9,7 +9,7 @@
 		overflow: hidden;
 		position: relative;
 	}
-	
+
 	.pattern * {
 		position: absolute;
 	}
@@ -106,6 +106,7 @@ function createPattern(countX, countY, width, height, srcPatch){
 
 function attachBehavior(target){
 	document.addEventListener("click", handleRemoveClickedPixel);
+	document.addEventListener("click", handleAddPixelOnClick);
 }
 
 // removes pixels from all instances of the patches 
@@ -118,6 +119,41 @@ function handleRemoveClickedPixel(event){
 	for (var i=0, n=matches.length; i<n; i++){
 		var match = matches[i];
 		match.parentNode.removeChild(match);
+	}
+}
+
+// adds a pixel where a patch is clicked
+function handleAddPixelOnClick(event){
+
+	// verify the current click target is a patch
+	if (event.target.className !== "patch"){
+		return;
+	}
+	var patch = event.target;
+
+	// base pixel size off of size of existing pixels
+	var existingPixel = document.querySelector(".patch .pixel");
+	var pixelSize = existingPixel.getBoundingClientRect().width;
+
+	// get the position of the new pixel based
+	// on the mouse position within the clicked patch
+	var patchRect = patch.getBoundingClientRect();
+	var x = event.clientX - patch.clientLeft - patchRect.left;
+	var y = event.clientY - patch.clientTop - patchRect.top;
+
+	// snap the position within the pixel grid (based on pixel size)
+	x = pixelSize * Math.floor(x/pixelSize);
+	y = pixelSize * Math.floor(y/pixelSize);
+
+	// create the pixel to add
+	var pixel = createElemAt("pixel", x, y, pixelSize);
+
+	// add the pixel to all patches
+	var patches = document.querySelectorAll(".patch");
+
+	for (var i=0, n=patches.length; i<n; i++){
+		var pixelClone = pixel.cloneNode(true);
+		patches[i].appendChild(pixelClone);
 	}
 }
 
