@@ -9,20 +9,17 @@
 		overflow: hidden;
 		position: relative;
 	}
+	
 	.pattern * {
 		position: absolute;
 	}
 
 	.patch {
-		width: 100px;
-		height: 100px;
 		background-color: SteelBlue;
 		overflow: hidden;
 	}
 
 	.patch .pixel {
-		width: 3px;  /* Default value. Gets replaced in 'createElemAt' */
-		height: 3px; /* Default value. Gets replaced in 'createElemAt' */
 		background-color: DeepSkyBlue;
 	}
 	</style>
@@ -85,18 +82,20 @@ function createElemAt(className, x, y, size){
 	return elem;
 }
 
-function createPattern(countX, countY, offsetX, offsetY, srcPatch){
+function createPattern(countX, countY, width, height, srcPatch){
 	var pattern = document.createElement("div");
 	pattern.className = "pattern";
-	pattern.style.width = countX * offsetX + "px";
-	pattern.style.height = countY * offsetY + "px";
+	pattern.style.width = countX * width + "px";
+	pattern.style.height = countY * height + "px";
 
 	for (var y=0; y<countY; y++){
 		for (var x=0; x<countX; x++){
 			
 			var patch = srcPatch.cloneNode(true);
-			patch.style.left = x * offsetX + "px";
-			patch.style.top = y * offsetY + "px";
+			patch.style.left = x * width + "px";
+			patch.style.top = y * height + "px";
+			patch.style.width = width + "px";
+			patch.style.height = height + "px";
 			pattern.appendChild(patch);
 
 		}
